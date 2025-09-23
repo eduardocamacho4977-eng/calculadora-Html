@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="cal-container">
+    <h1>Calculadora</h1>
+    <input type="text" id="cal-display" disabled>
+
+    <div class="cal-buttons">
+      <!-- Fila 1 -->
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button onclick="setOperation('/')">÷</button>
+
+      <!-- Fila 2 -->
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button onclick="setOperation('*')">×</button>
+
+      <!-- Fila 3 -->
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button onclick="setOperation('-')">-</button>
+
+      <!-- Fila 4 -->
+      <button onclick="appendNumber('0')">0</button>
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="calculateResult()">=</button>
+      <button onclick="setOperation('+')">+</button>
+    </div>
+  </div>
+
+  <script>
+    let pantalla = document.getElementById("cal-display");
+    let primerNumero = null;
+    let operacion = null;
+    let esperandoSegundoNumero = false;
+
+    function appendNumber(num) {
+      if (esperandoSegundoNumero) {
+        pantalla.value = num;
+        esperandoSegundoNumero = false;
+      } else {
+        pantalla.value += num;
+      }
+    }
+
+    function setOperation(op) {
+      if (pantalla.value === "") return;
+      if (primerNumero === null) {
+        primerNumero = parseFloat(pantalla.value);
+      } else if (operacion) {
+        calculateResult();
+      }
+      operacion = op;
+      esperandoSegundoNumero = true;
+    }
+
+    function calculateResult() {
+      if (operacion === null || esperandoSegundoNumero) return;
+      let segundoNumero = parseFloat(pantalla.value);
+      switch (operacion) {
+        case "+": pantalla.value = primerNumero + segundoNumero; break;
+        case "-": pantalla.value = primerNumero - segundoNumero; break;
+        case "*": pantalla.value = primerNumero * segundoNumero; break;
+        case "/": pantalla.value = segundoNumero !== 0 ? primerNumero / segundoNumero : "Error"; break;
+      }
+      primerNumero = parseFloat(pantalla.value);
+      operacion = null;
+    }
+
+    function clearDisplay() {
+      pantalla.value = "";
+      primerNumero = null;
+      operacion = null;
+      esperandoSegundoNumero = false;
+    }
+  </script>
+</body>
+</html>
